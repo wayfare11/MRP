@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0" stdsetdef="1">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>排产计划工具</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QWidget {
+        background-color: #ffffff;
+        color: #000000;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    QPushButton {
+        background-color: #f0f0f0;
+        color: #000000;
+        border: 1px solid #ccc;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+
+    QPushButton:hover {
+        background-color: #e0e0e0;
+    }
+
+    QLabel {
+        color: #000000;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    QLineEdit {
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    QProgressBar {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        color: #000000;
+    }
+
+    QProgressBar::chunk {
+        background-color: #e0e0e0;
+    }
+
+    QTableWidget {
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    QTextEdit {
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 4px;
+    }
+   </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <widget class="QSplitter" name="splitter">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <widget class="QGroupBox" name="fileUploadGroupBox">
+       <property name="title">
+        <string>文件上传</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QPushButton" name="uploadSalesForecastButton">
+          <property name="text">
+           <string>上传销售预测文件</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="salesForecastStatusLabel">
+          <property name="text">
+           <string>未上传</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="uploadInventoryButton">
+          <property name="text">
+           <string>上传现存量查询文件</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="inventoryStatusLabel">
+          <property name="text">
+           <string>未上传</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="uploadProductionOrdersButton">
+          <property name="text">
+           <string>上传生产订单列表文件</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="productionOrdersStatusLabel">
+          <property name="text">
+           <string>未上传</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QGroupBox" name="operationGroupBox">
+       <property name="title">
+        <string>操作</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <widget class="QPushButton" name="runButton">
+          <property name="text">
+           <string>执行操作</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="exportButton">
+          <property name="text">
+           <string>导出结果</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QGroupBox" name="logGroupBox">
+       <property name="title">
+        <string>日志</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <widget class="QTextEdit" name="logTextEdit">
+          <property name="readOnly">
+           <bool>true</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">
+            QTextEdit {
+                background-color: #ffffff;
+                color: #000000;
+                border: 1px solid #ccc;
+                padding: 5px;
+                border-radius: 4px;
+            }
+           </string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
