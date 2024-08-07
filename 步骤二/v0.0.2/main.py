@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from mainwindow_ui import Ui_MainWindow
+from UI_files.mainwindow_ui import Ui_MainWindow
 from mps.mps_plan_app import MPSPlanApp
 
 class MainWindow(QMainWindow, Ui_MainWindow):

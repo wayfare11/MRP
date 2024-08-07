@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressDialog, QApplication
 from PyQt5.QtCore import Qt
-from mpsplan_ui import Ui_MainWindow as MPSPlanUi
+from UI_files.mpsplan_ui import Ui_MainWindow as MPSPlanUi
 from mps.data_readers import read_sales_forecast, read_inventory, read_production_orders, read_safety_stock
 from mps.inventory_extraction import extract_inventory_data, extract_in_transit_quantity
 from mps.demand_calculation import calculate_monthly_demand
@@ -70,6 +70,19 @@ class MPSPlanApp(QMainWindow, MPSPlanUi):
             self.log_to_main_window("操作失败：未上传所有文件")
             return
 
+        # 获取用户输入的工时值
+        try:
+            month1_hours = float(self.month1HoursInput.text())
+            month2_hours = float(self.month2HoursInput.text())
+            month3_hours = float(self.month3HoursInput.text())
+            month4_hours = float(self.month4HoursInput.text())
+        except ValueError:
+            QMessageBox.warning(self, "警告", "请输入有效的工时值（数字）")
+            self.log_to_main_window("操作失败：无效的工时值")
+            return
+
+        working_hours = [month1_hours, month2_hours, month3_hours, month4_hours]
+
         try:
             df_sales_forecast = read_sales_forecast(self.sales_forecast_file)
             df_inventory = read_inventory(self.inventory_file)
@@ -95,6 +108,7 @@ class MPSPlanApp(QMainWindow, MPSPlanUi):
             df_sales_forecast['退货待返工(现存量查询)'] = 0
             df_sales_forecast['在途(生产订单列表)'] = 0
             df_sales_forecast['月底库存'] = 0
+            df_sales_forecast['标准工时'] = 0
             df_sales_forecast['安全库存'] = 0
             df_sales_forecast['损耗'] = 0
             df_sales_forecast['最小排产量'] = 0
@@ -128,14 +142,17 @@ class MPSPlanApp(QMainWindow, MPSPlanUi):
 
                 # 计算月底库存
                 end_of_month_stock = finished_goods_stock + parsing_stock + in_transit_quantity - unshipped_orders
-                # end_of_month_stock = finished_goods_stock + parsing_stock + in_transit_quantity + return_stock - unshipped_orders
                 df_sales_forecast.at[index, '月底库存'] = end_of_month_stock
 
                 # 获取安全库存 和 损耗
+                standand_work = df_safety_stock.loc[df_safety_stock['存货编码'] == stock_code, '标准工时（单位：人/H/PCS）'].values
                 safety_stock = df_safety_stock.loc[df_safety_stock['存货编码'] == stock_code, '安全库存'].values
                 waste_stock = df_safety_stock.loc[df_safety_stock['存货编码'] == stock_code, '损耗'].values
                 minimal_product = df_safety_stock.loc[df_safety_stock['存货编码'] == stock_code, '最小排产量'].values
                 
+                if len(standand_work) > 0 and standand_work[0] > 0:
+                    df_sales_forecast.at[index, '标准工时'] = standand_work[0]
+
                 if len(safety_stock) > 0 and safety_stock[0] > 0:
                     df_sales_forecast.at[index, '安全库存'] = safety_stock[0]
                 
@@ -151,7 +168,10 @@ class MPSPlanApp(QMainWindow, MPSPlanUi):
 
             progress_dialog.close()
 
-            print("计算每个月需求")
+            df_sales_forecast.loc[df_sales_forecast['标准工时'] == 0, '标准工时'] = 10
+            df_sales_forecast['标准工时'] = 1 / df_sales_forecast['标准工时']
+
+            self.log_to_main_window("计算每个月需求")
             # 计算每个月的需求
             months = calculate_monthly_demand(df_sales_forecast)
 
@@ -165,13 +185,20 @@ class MPSPlanApp(QMainWindow, MPSPlanUi):
 
             # 计算MPS和结余
             for i, month in enumerate(months):
-                print('month', month)
                 if progress_dialog.wasCanceled():
                     self.log_to_main_window("操作已取消")
                     return
 
+                # self.log_to_main_window(f"Calculating MPS for month: {month}")
+                # calculate_mps(df_sales_forecast, month, working_hours)
+
                 self.log_to_main_window(f"Calculating MPS for month: {month}")
-                calculate_mps(df_sales_forecast, month)
+                mps_df, error_message = calculate_mps(df_sales_forecast, month, working_hours)
+                
+                if error_message:
+                    QMessageBox.warning(self, "警告", error_message)
+                    self.log_to_main_window(f"操作失败：{error_message}")
+                    return
 
                 # 更新进度条
                 progress_dialog.setValue(i + 1)
@@ -194,7 +221,7 @@ class MPSPlanApp(QMainWindow, MPSPlanUi):
             file_path, _ = QFileDialog.getSaveFileName(self, "保存结果文件", "", "Excel Files (*.xlsx *.xls)")
             if file_path:
                 try:
-                    self.df_result.to_excel(file_path, index=False)
+                    self.df_result.to_excel(file_path, index=False, engine='xlsxwriter')
 
                     # 调整列宽
                     self.adjust_column_width(file_path)

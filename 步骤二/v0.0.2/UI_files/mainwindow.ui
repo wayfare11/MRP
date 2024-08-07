@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>排产计划工具</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">
+    QWidget {
+        background-color: #ffffff;
+        color: #000000;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+    }
+
+    QPushButton {
+        background-color: #f0f0f0;
+        color: #000000;
+        border: 1px solid #ccc;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 8px;
+    }
+
+    QPushButton:hover {
+        background-color: #e0e0e0;
+    }
+
+    QLabel {
+        color: #000000;
+        font-size: 14px;
+    }
+
+    QLineEdit {
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    QProgressBar {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        text-align: center;
+        color: #000000;
+    }
+
+    QProgressBar::chunk {
+        background-color: #e0e0e0;
+    }
+
+    QTableWidget {
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    QTextEdit {
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid #ccc;
+        padding: 5px;
+        border-radius: 4px;
+    }
+
+    QMenuBar {
+        background-color: #f0f0f0;
+        color: #000000;
+    }
+
+    QMenu {
+        background-color: #f0f0f0;
+        color: #000000;
+    }
+
+    QMenu::item {
+        background-color: transparent;
+        color: #000000;
+    }
+
+    QMenu::item:selected {
+        background-color: #e0e0e0;
+        color: #000000;
+    }
+
+    QMenu::item:hover {
+        background-color: #d0d0d0;
+        color: #000000;
+    }
+   </string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTextEdit" name="logTextEdit">
+      <property name="styleSheet">
+       <string notr="true">
+        QTextEdit {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #ccc;
+            padding: 5px;
+            border-radius: 4px;
+        }
+       </string>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFunctions">
+    <property name="title">
+     <string>功能</string>
+    </property>
+    <addaction name="actionPre_Scheduling"/>
+    <addaction name="actionCreate_Production_Material_Details"/>
+    <addaction name="actionCreate_Next_Month_Production_Plan"/>
+    <addaction name="actionCreate_Next_Month_Material_Procurement_Plan"/>
+    <addaction name="actionConfirm_In_Transit_Material_Arrival_Status"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>帮助</string>
+    </property>
+    <addaction name="actionHelp_Document"/>
+    <addaction name="actionFAQ"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <addaction name="menuFunctions"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionPre_Scheduling">
+   <property name="text">
+    <string>预排产计划</string>
+   </property>
+  </action>
+  <action name="actionCreate_Production_Material_Details">
+   <property name="text">
+    <string>制作生产用料明细</string>
+   </property>
+  </action>
+  <action name="actionCreate_Next_Month_Production_Plan">
+   <property name="text">
+    <string>制作次月生产计划</string>
+   </property>
+  </action>
+  <action name="actionCreate_Next_Month_Material_Procurement_Plan">
+   <property name="text">
+    <string>制作次月物料采购计划</string>
+   </property>
+  </action>
+  <action name="actionConfirm_In_Transit_Material_Arrival_Status">
+   <property name="text">
+    <string>确认在途订单物料到货状况</string>
+   </property>
+  </action>
+  <action name="actionHelp_Document">
+   <property name="text">
+    <string>帮助文档</string>
+   </property>
+  </action>
+  <action name="actionFAQ">
+   <property name="text">
+    <string>常见问题</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>关于</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
