@@ -1,0 +1,29 @@
+import pandas as pd
+import numpy as np
+
+# 创建初始的DataFrame
+data = {'y1': [np.nan, np.nan, np.nan],
+        'y2': [np.nan, np.nan, np.nan],
+        'y3': [np.nan, np.nan, np.nan]}
+index = ['x1', 'x2', 'x3']
+df = pd.DataFrame(data, index=index)
+
+print("初始的DataFrame:")
+print(df)
+
+# 创建包含更新操作的DataFrame
+updates = pd.DataFrame({
+    'X': ['x1', 'x2', 'x3'],
+    'Y': ['y2', 'y1', 'y3'],
+    'Z': [5, 3, 7]
+})
+
+print("\n更新操作的DataFrame:")
+print(updates)
+
+# 使用DataFrame的索引和列进行批量更新
+for i, row in updates.iterrows():
+    df.at[row['X'], row['Y']] = row['Z']
+
+print("\n更新后的DataFrame:")
+print(df)
