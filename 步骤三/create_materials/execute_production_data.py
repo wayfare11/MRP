@@ -176,6 +176,12 @@ def execute_production_order_mode(material_list, material_purchase_df):
     # 删除辅助列
     material_list.drop(columns=['前月负值'], inplace=True)
 
+    # 部分物料 到货时间 设为 等通知到货
+    material_purchase_df['备注'].fillna('', inplace=True)
+    note_wait_arrival_df = material_purchase_df[['存货编码', '备注']][material_purchase_df['备注'].str.contains('等通知到货')]
+    # material_list 的 建议到货时间有值, 且物料编码在note_wait_arrival_df的存货编码中, 则将建议到货时间设为等通知到货
+    material_list.loc[(material_list['建议下单量'] != 0) & (material_list['子件物料编码'].isin(note_wait_arrival_df['存货编码'])), '建议到货时间'] = '等通知到货'
+
     # 阶梯价
     step_price_df = material_purchase_df[['存货编码', '阶梯价']]
 
@@ -227,6 +233,10 @@ def execute_semi_finished_product_code(material_list, production_planning_df, se
     purchase_order_df = purchase_order_df[['存货编码', '订单未入库数量']].groupby('存货编码', as_index=False).sum()
 
     outsourcing_order_df = outsourcing_order_df[['存货编码', '未入库数量']].groupby('存货编码', as_index=False).sum()
+
+    # 部分物料 到货时间 设为 等通知到货
+    material_purchase_df['备注'].fillna('', inplace=True)
+    note_wait_arrival_df = material_purchase_df[['存货编码', '备注']][material_purchase_df['备注'].str.contains('等通知到货')]
 
     # 初始化半成品物料信息
     semi_finished_product_info = {}  
@@ -351,8 +361,12 @@ def execute_semi_finished_product_code(material_list, production_planning_df, se
                             material_list.loc[i, f'半成品物料建议下单量_{j+1}'] = np.ceil(-material_list.loc[i, f'半成品物料结余_{j+1}'] / min_order_quantity) * min_order_quantity
 
                         # 计算到货时间
-                        order_date = datetime.strptime(order_time, '%Y-%m-%d')
-                        arrival_date = order_date + timedelta(days=purchase_cycle)
-                        material_list.loc[i, f'半成品物料到货时间_{j+1}'] = arrival_date.strftime('%Y年%m月%d日')
+                        # 判断是否在备注中有等通知到货
+                        if material_list.loc[i, f'半成品物料编码_{j+1}'] in note_wait_arrival_df['存货编码'].values:
+                            material_list.loc[i, f'半成品物料到货时间_{j+1}'] = '等通知到货'
+                        else:
+                            order_date = datetime.strptime(order_time, '%Y-%m-%d')
+                            arrival_date = order_date + timedelta(days=purchase_cycle)
+                            material_list.loc[i, f'半成品物料到货时间_{j+1}'] = arrival_date.strftime('%Y年%m月%d日')
 
     return material_list
